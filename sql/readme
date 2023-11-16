@@ -1,0 +1,10 @@
+```
+psql -U postgres
+CREATE USER budget WITH password 'grove';
+CREATE DATABASE budget_db;
+ALTER DATABASE budget_db OWNER TO budget;
+``
+### For future usage
+```
+psql --dbname budget_db -U budget
+```
