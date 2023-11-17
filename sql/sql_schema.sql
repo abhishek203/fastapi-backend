@@ -1,4 +1,3 @@
-
 drop table if exists people CASCADE;
 create table people(
     id int,

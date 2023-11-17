@@ -28,33 +28,36 @@ async def add_budget_to_db(b):
 
     await db.disconnect()
 
-async def get_total_spending_for_particular_category(person_id,category,start_date):
+async def get_total_spending_for_particular_category(person_list,category,start_date,end_date):
+    # print(start_date,end_date)
     query = f'''
     select 
         sum(amount)
     from
         transaction
     where
-        person_id = {person_id}
+        person_id in {person_list}
     and
         category = '{category}'
     and
-        current_date > '{start_date}'
-    ;
+       tran_day > '{start_date}'
+    and
+       tran_day < '{end_date}'
     '''
+    # print(query)
     db = databases.Database(DATABASE_URL)
 
     await db.connect()
 
     result = await db.fetch_one(query)
-
+    # print(result[0])
     await db.disconnect()
     try:
         if result[0] == None:
             return 0
     except:
         print("NO data in Budget table")
-
+    return result[0]
 async def get_list_of_persons_in_budget(budgetID):
     query = f'''
     select
@@ -101,6 +104,32 @@ async def get_start_time_in_budget(budgetID):
     query = f'''
     select
         start_day
+    from
+        budget
+    where
+        budget_id = {budgetID}
+    '''
+    db = databases.Database(DATABASE_URL)
+
+    await db.connect()
+
+    result = await db.fetch_one(query)
+    await db.disconnect()
+    
+    try:
+        return result[0]
+        
+    except:
+        print("NO data in Budget table")
+    
+   
+
+    return result[0]
+
+async def get_end_time_in_budget(budgetID):
+    query = f'''
+    select
+        end_day
     from
         budget
     where
