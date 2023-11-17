@@ -9,6 +9,13 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from models import budget
 
 DATABASE_URL = "postgresql://budget:grove@localhost/budget_db"
+# db = databases.Database(DATABASE_URL)
+
+# async def connect():
+#     await db.connect()
+
+# async def disconnect():
+#     await db.disconnect()
 
 async def add_budget_to_db(b):
     query = f'''
@@ -28,18 +35,20 @@ async def add_budget_to_db(b):
 
     await db.disconnect()
 
-async def get_total_spending_for_particular_category(person_id,category,start_date):
+async def get_total_spending_for_particular_category(person_list,category,start_date,end_date):
     query = f'''
     select 
         sum(amount)
     from
         transaction
     where
-        person_id = {person_id}
+        person_id in {person_list}
     and
         category = '{category}'
     and
-        current_date > '{start_date}'
+       tran_day > '{start_date}'
+    and
+       tran_day < '{end_date}'
     ;
     '''
     db = databases.Database(DATABASE_URL)
@@ -49,9 +58,12 @@ async def get_total_spending_for_particular_category(person_id,category,start_da
     result = await db.fetch_one(query)
 
     await db.disconnect()
+
     try:
         if result[0] == None:
             return 0
+        else:
+            return result[0]
     except:
         print("NO data in Budget table")
 
@@ -106,6 +118,33 @@ async def get_start_time_in_budget(budgetID):
     where
         budget_id = {budgetID}
     '''
+    
+
+    db = databases.Database(DATABASE_URL)
+
+    await db.connect()
+
+    result = await db.fetch_one(query)
+    await db.disconnect()
+    
+    
+    try:
+        return result[0]
+        
+    except:
+        print("NO data in Budget table") 
+
+    return result[0]
+
+async def get_end_time_in_budget(budgetID):
+    query = f'''
+    select
+        end_day
+    from
+        budget
+    where
+        budget_id = {budgetID}
+    '''
     db = databases.Database(DATABASE_URL)
 
     await db.connect()
@@ -119,12 +158,10 @@ async def get_start_time_in_budget(budgetID):
     except:
         print("NO data in Budget table")
     
-   
-
     return result[0]
 
 async def get_amount_in_budget(budgetID):
-    
+    print("hiii")
     query = f'''
     select
         total_amount
@@ -140,6 +177,7 @@ async def get_amount_in_budget(budgetID):
     result = await db.fetch_one(query)
 
     await db.disconnect()
+    print(result[0])
     try:
         return result[0]
     except:
@@ -154,9 +192,11 @@ if __name__ == "__main__":
     # b.end_date = '2023-12-17'
     # b.list_of_people_id = (1,2,3)
     # b.total_amount = 1000
-    print((asyncio.run(get_start_time_in_budget(1))))
-    print((asyncio.run(get_amount_in_budget(1))))
-    print((asyncio.run(get_total_spending_for_particular_category(1,'food','2023-11-01'))))
-    print((asyncio.run(get_category_in_budget(1))))
-    print(asyncio.run(get_list_of_persons_in_budget(1)))
-    # asyncio.run(get_amount_in_budget(0))
+    # db = asyncio.run(connect())
+    # print((asyncio.run(get_start_time_in_budget(1))))
+    # print( await get_amount_in_budget(1))
+    # print((asyncio.run(get_total_spending_for_particular_category(1,'food','2023-11-01'))))
+    # print((asyncio.run(get_category_in_budget(1))))
+    # print(asyncio.run(get_list_of_persons_in_budget(1)))
+    # # asyncio.run(get_amount_in_budget(0))
+    pass
