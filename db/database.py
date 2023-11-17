@@ -190,6 +190,20 @@ async def update_budget_amount_in_db(budgetID,new_amount):
 
     await db.disconnect()
 
+async def delete_budget_entry_from_db(budgetID):
+    query = f'''
+    delete 
+        from budget
+    where
+        budget_id = {budgetID};
+    '''
+    db = databases.Database(DATABASE_URL)
+
+    await db.connect()
+
+    await db.fetch_one(query)
+
+    await db.disconnect()
 
 if __name__ == "__main__":
     b = budget.Budget(budget_id=3,total_amount=1000,category='ff',currency='INR',start_date='2023-11-17',end_date='2023-12-17',list_of_people_id='{1,2,3}',current_consumption=11)
@@ -200,7 +214,8 @@ if __name__ == "__main__":
     # b.end_date = '2023-12-17'
     # b.list_of_people_id = (1,2,3)
     # b.total_amount = 1000
-    asyncio.run(update_budget_amount_in_db(3,2333))
+    asyncio.run(add_budget_to_db(b))
+    print(asyncio.run(delete_budget_entry_from_db(23)))
     # asyncio.run(add_budget_to_db(b))
     # print((asyncio.run(get_start_time_in_budget(1))))
     # print((asyncio.run(get_amount_in_budget(1))))

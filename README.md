@@ -1,4 +1,4 @@
-# fastapi-backend
+# FastAPI-backend
 
 ## Models
 
@@ -22,7 +22,7 @@ The period of status evaluation is from the start date to the earlier of end dat
 For example, if the start date is 20th Oct, the end date is 20th Nov and today is 17th Nov then we would fetch the transactions from 20th Oct to 17th Nov. 
 Next, we fetch data asynchronously for various interval slices from the transaction table. This can be improved by fetching all data at once and processing everything in Python. 
 
-Sample output of status API - 
+Sample output of status API - This can be used for plotting the graph
 ![Sample output](images/status-sample-output.png)
 
 ## Pending tasks

@@ -28,7 +28,7 @@ class BudgetHandler:
             pass
             #send push notification
         
-        return res
+        return 100*res/self.amount
 
     async def run_concurrently(self, curr_date_list):
 
