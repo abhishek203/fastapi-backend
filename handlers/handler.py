@@ -22,7 +22,13 @@ class BudgetHandler:
 
     async def call_db_function(self, curr_date):
 
-        return await database.get_total_spending_for_particular_category(self.person_list, self.category, self.start_date, curr_date)
+        res = await database.get_total_spending_for_particular_category(self.person_list, self.category, self.start_date, curr_date)
+
+        if res > self.amount:
+            pass
+            #send push notification
+        
+        return res
 
     async def run_concurrently(self, curr_date_list):
 

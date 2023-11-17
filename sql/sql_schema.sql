@@ -29,5 +29,6 @@ create table transaction(
     person_id int,
     fip_name varchar,
     descrpiton varchar,
-    primary key(t_id)
+    primary key(t_id),
+    foreign key(person_id) references people(id)
 );

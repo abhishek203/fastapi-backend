@@ -1,3 +1,7 @@
+Insert into people
+    Values
+    (1,'Abhi');
+
 Insert into budget(budget_id,total_amount,start_day,category,currency,list_of_people_id,current_consumption,end_day)
     Values
     (1,4000,'2023-10-17','food','INR','{1,2,3}',111,'2023-11-17')

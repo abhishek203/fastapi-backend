@@ -4,7 +4,9 @@ CREATE USER budget WITH password 'grove';
 CREATE DATABASE budget_db;
 ALTER DATABASE budget_db OWNER TO budget;
 ``
-### For future usage
+### To run sql files
 ```
-psql --dbname budget_db -U budget
+psql --dbname budget_db -U budget -a -f sql/sql_schema.sql
+psql --dbname budget_db -U budget -a -f sql/test_data.sql
+
 ```

@@ -15,9 +15,9 @@ async def add_budget_to_db(b):
     Insert into budget(budget_id,total_amount,start_day,category,currency,list_of_people_id,current_consumption,end_day)
     Values
     ({b.budget_id},{b.total_amount},
-    {str(b.start_date)},{b.category},
-    {b.currency},{b.list_of_people_id},
-    {b.current_consumption},{str(b.end_date)}
+    '{b.start_date}','{b.category}',
+    '{b.currency}','{b.list_of_people_id}',
+    {b.current_consumption},'{b.end_date}'
     );
     '''
     db = databases.Database(DATABASE_URL)
@@ -174,8 +174,25 @@ async def get_amount_in_budget(budgetID):
     except:
         print("NO data in Budget table")
 
+async def update_budget_amount_in_db(budgetID,new_amount):
+    
+    query  = f'''
+        update budget
+        set total_amount = {new_amount}
+        where
+        budget_id = {budgetID};        
+    '''
+    db = databases.Database(DATABASE_URL)
+
+    await db.connect()
+
+    await db.execute(query)
+
+    await db.disconnect()
+
+
 if __name__ == "__main__":
-    b = budget.Budget(budget_id=1,total_amount=1000,category='ff',currency='INR',start_date='2023-11-17',end_date='2023-12-17',list_of_people_id='{1,2,3}',current_consumption=11)
+    b = budget.Budget(budget_id=3,total_amount=1000,category='ff',currency='INR',start_date='2023-11-17',end_date='2023-12-17',list_of_people_id='{1,2,3}',current_consumption=11)
     # b.budget_id = 1
     # b.category = 'food'
     # b.currency = 'INR'
@@ -183,9 +200,11 @@ if __name__ == "__main__":
     # b.end_date = '2023-12-17'
     # b.list_of_people_id = (1,2,3)
     # b.total_amount = 1000
-    print((asyncio.run(get_start_time_in_budget(1))))
-    print((asyncio.run(get_amount_in_budget(1))))
-    print((asyncio.run(get_total_spending_for_particular_category(1,'food','2023-11-01'))))
-    print((asyncio.run(get_category_in_budget(1))))
-    print(asyncio.run(get_list_of_persons_in_budget(1)))
+    asyncio.run(update_budget_amount_in_db(3,2333))
+    # asyncio.run(add_budget_to_db(b))
+    # print((asyncio.run(get_start_time_in_budget(1))))
+    # print((asyncio.run(get_amount_in_budget(1))))
+    # print((asyncio.run(get_total_spending_for_particular_category(1,'food','2023-11-01'))))
+    # print((asyncio.run(get_category_in_budget(1))))
+    # print(asyncio.run(get_list_of_persons_in_budget(1)))
     # asyncio.run(get_amount_in_budget(0))
